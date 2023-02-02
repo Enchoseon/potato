@@ -5,6 +5,7 @@ PAUSE=5
 INTERACTIVE=true
 MUTE=false
 
+# Print help to console
 show_help() {
 	cat <<-END
 		usage: potato [-s] [-m] [-w m] [-b m] [-h]
@@ -19,10 +20,45 @@ show_help() {
 	END
 }
 
+# Play notification sound
 play_notification() {
 	aplay -q /usr/lib/potato/notification.wav&
 }
 
+# Toggle Do Not Disturb
+toggle_dnd() {
+	enableDnd=$1
+	if $enableDnd; then
+		python /usr/lib/potato/doNotDisturb.py &
+	else
+		proc=$(pgrep doNotDisturb)
+		if [[ $proc ]]; then
+			kill $proc
+		fi
+	fi
+}
+
+# Send Toast Notification
+send_toast() {
+	message=$1
+	toggle_dnd false
+	notify-send -a "Potato Mode" "$message"
+	sleep 5
+	toggle_dnd true
+}
+
+# Cleanup Do Not Disturb script when exiting
+stty -echoctl
+cleanup() {
+	toggle_dnd false
+	exit
+}
+trap "cleanup" SIGINT
+
+# Enable Do Not Disturb
+toggle_dnd true
+
+# Get Arguments
 while getopts :sw:b:m opt; do
 	case "$opt" in
 	s)
@@ -60,7 +96,9 @@ do
 		sleep 1m
 	done
 
+	# Work Over
 	! $MUTE && play_notification
+	send_toast "Work over" &
 	if $INTERACTIVE; then
 		read -d '' -t 0.001
 		echo -e "\a"
@@ -74,7 +112,9 @@ do
 		sleep 1m
 	done
 
+	# Pause Over
 	! $MUTE && play_notification
+	send_toast "Pause over" &
 	if $INTERACTIVE; then
 		read -d '' -t 0.001
 		echo -e "\a"
