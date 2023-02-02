@@ -1,7 +1,7 @@
 #!usr/bin/python3
 # Source: https://www.reddit.com/r/kde/comments/t7wj5c/comment/hzkprnf/
 
-# Set process name to 'workModeScript.py'
+# Set process name to 'doNotDisturb.py'
 def set_procname(Newname):
 	newname = bytes(Newname, "utf-8")
 	from ctypes import cdll, byref, create_string_buffer
