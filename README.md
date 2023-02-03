@@ -1,6 +1,8 @@
 # potato
 
-A pomodoro timer for the shell.
+A pomodoro timer for the shell. This fork sends toasts and enables Do Not Disturb.
+
+This is just a tweak for my pesonal use, it's not an "improved" version.
 
 ## Credits
 Notification sound (notification.wav, originally
