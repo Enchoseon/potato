@@ -76,6 +76,7 @@ send_toast() {
 
 # Prompt/wait for user input
 prompt_user() {
+	read -d '' -t 0.001
 	echo "Press any key to continue..."
 	read
 }
