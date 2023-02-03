@@ -1,15 +1,20 @@
 pkgname=potato
 pkgver=6
 pkgrel=1
-pkgdesc="A pomodoro timer for the shell"
+pkgdesc="A pomodoro timer for the shell. This fork sends toasts and enables Do Not Disturb."
 arch=('any')
-url="https://github.com/Bladtman242/potato"
+url="https://github.com/Enchoseon/potato"
 license=('MIT')
-depends=('alsa-utils')
+depends=('alsa-utils'
+         'libnotify'
+         'python'
+         'dbus-python')
 source=('potato.sh'
+        'doNotDisturb.py'
         'notification.wav'
         'LICENSE')
-md5sums=('3d5707d4194f205502fa2c2778252b90'
+md5sums=('a7b78d3d773a50e6160b26ab0efadddc'
+         '6a1f93699a0e933812b732cfdd26c3e9'
          'b01bacb54937c9bdd831f4d4ffd2e31c'
          '1ddcbd2862764b43d75fb1e484bf8912')
 package() {
