@@ -9,7 +9,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 # Usage
 
 ```
-usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-n] [-m] [-p] [-h]
+usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [-p] [-h]
     (timers)
     -w <integer> [default: 25]:
         work interval timer in minutes. This is how long a work interval is.

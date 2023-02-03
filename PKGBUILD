@@ -17,7 +17,7 @@ source=('potato.sh'
         'doNotDisturb.py'
         'notification.wav'
         'LICENSE')
-md5sums=('a18f8bd12f2092b0e58cdfdba69ca739'
+md5sums=('431a61b59f752371db9896324805ba39'
          '6a1f93699a0e933812b732cfdd26c3e9'
          'b01bacb54937c9bdd831f4d4ffd2e31c'
          '1ddcbd2862764b43d75fb1e484bf8912')
