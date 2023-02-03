@@ -21,4 +21,5 @@ package() {
 	install -D $srcdir/potato.sh $pkgdir/usr/bin/$pkgname
 	install -D -m644 $srcdir/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 	install -D $srcdir/notification.wav $pkgdir/usr/lib/$pkgname/notification.wav
+	install -D $srcdir/doNotDisturb.py $pkgdir/usr/lib/$pkgname/doNotDisturb.py
 }
