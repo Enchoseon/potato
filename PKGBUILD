@@ -1,20 +1,21 @@
-pkgname=potato
+pkgname=potato-redux
 pkgver=7
 pkgrel=1
 pkgdesc="A pomodoro timer for the shell. This fork sends toasts and enables Do Not Disturb."
 arch=('any')
 url="https://github.com/Enchoseon/potato"
 license=('MIT')
-depends=('alsa-utils'
-         'libnotify'
-         'python'
-         'dbus-python')
-optdepend=('sox: Brown noise support')
+conflicts=('potato')
+depends=('alsa-utils')
+optdepends=('sox: Brown noise support'
+            'libnotify: Toast notification support'
+            'python: Do Not Disturb support'
+            'dbus-python: Do Not Disturb support')
 source=('potato.sh'
         'doNotDisturb.py'
         'notification.wav'
         'LICENSE')
-md5sums=('86c23380e0554fe5a669a734a5cd2ffe'
+md5sums=('dbc24c0e3e623bd9aad8a876e5117b6a'
          '6a1f93699a0e933812b732cfdd26c3e9'
          'b01bacb54937c9bdd831f4d4ffd2e31c'
          '1ddcbd2862764b43d75fb1e484bf8912')

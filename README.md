@@ -1,8 +1,6 @@
-# potato
+# Potato Redux
 
-A pomodoro timer for the shell. This fork sends toasts and enables Do Not Disturb.
-
-This is just a highly opinionated tweak for my own personal use, it's not an "improved" version.
+A pomodoro timer for the shell. This fork of Potato has new features and quality-of-life changes while remaining a simple shell script.
 
 # Installation
 
@@ -11,41 +9,58 @@ This is just a highly opinionated tweak for my own personal use, it's not an "im
 # Usage
 
 ```
-usage: potato [-s] [-m] [-w m] [-b m] [-n] [-h]
-  -s: simple output. Intended for use in scripts
-      When enabled, potato outputs one line for each minute, and doesn't print the bell character
-      (ascii 007)
+usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-n] [-m] [-p] [-h]
+    -w <integer> [default: 25]:
+        work interval timer in minutes. This is how long a work interval is.
+    -b <integer> [default 5]:
+        break interval timer in minutes. This is how long a break interval is.
+    -g <integer> [default 5]:
+        grace timer in seconds This is how long notifications are shown for.
 
-  -m: mute -- don't play sounds when work/break is over
-  -w m: let work periods last m minutes (default is 25)
-  -b m: let break periods last m minutes (default is 5)
-  -n: play noise
-  -h: print this message
+    -d:
+        enable do not disturb (while the timer is running)
+    -t:
+        enable desktop toasts
+    -n:
+        play brown noise (requires SoX to be installed)
+
+    -m:
+        don't play a notification sound when a timer ends
+    -p:
+        prompt for user input when a timer ends (won't continue until user input in received)
+
+    -h:
+        print this help message and exit
 ```
 
-# New Features of This Fork
+# Optional Features
 
-### Brown Noise
+*(You must install each feature's respective optional dependencies to use them!)*
 
-Run `potato -n true` to play some brown noise while potato runs.
+## Brown Noise
 
-### Do Not Disturb
+Dependency: sox
 
-While Potato runs, Do Not Disturb will be turned on
+Play Brown noise while Potato runs.
 
-This should work for all f.do DEs (Gnome, Plasma, XFCE), though I've only actually used it on Plasma.
+## Do Not Disturb
 
-### Toasts
+Dependency: python, dbus-python
 
-Toast notifications are sent at two (2) times:
+Turn on Do Not Disturb while Potato runs. Compatible with f.do DEs (Gnome, Plasma, XFCE).
+
+## Toast Notifications
+
+Dependency: libnotify
+
+Send toast notifications at two (2) times:
 1. When the Work timer finishes
-2. When the Pause timer finishes
+2. When the Break timer finishes
 
 # Bugs
 
 1. If you have Discord running in the background you won't get any toast notifications because of Do Not Disturb, but you'll still hear the notification sound even if it's minimized.
-2. The script temporarily disables Do Not Disturb to send its toast notifications, which can result in notification spam.
-3. Because of the bell character, the script technically already sends a toast notification. This can be fixed by running potato with simple mode, but it really should just be configurable.
+2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb to send its toast notifications; resulting in notification spam.
 
 ## Credits
 Notification sound (notification.wav, originally
