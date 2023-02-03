@@ -1,7 +1,9 @@
+# Maintainer: Enchoseon <>
+# Contributor: bladtman
 pkgname=potato-redux
 pkgver=7
 pkgrel=1
-pkgdesc="A pomodoro timer for the shell with new features and QOL changes."
+pkgdesc="A pomodoro timer for the shell with new features and quality-of-life changes."
 arch=('any')
 url="https://github.com/Enchoseon/potato-redux"
 license=('MIT')
@@ -15,12 +17,12 @@ source=('potato.sh'
         'doNotDisturb.py'
         'notification.wav'
         'LICENSE')
-md5sums=('4aa885652605818d8e7761ae59f18497'
+md5sums=('a18f8bd12f2092b0e58cdfdba69ca739'
          '6a1f93699a0e933812b732cfdd26c3e9'
          'b01bacb54937c9bdd831f4d4ffd2e31c'
          '1ddcbd2862764b43d75fb1e484bf8912')
 package() {
-	install -D $srcdir/potato.sh $pkgdir/usr/bin/$pkgname
+	install -D $srcdir/potato.sh $pkgdir/usr/bin/potato
 	install -D -m644 $srcdir/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 	install -D $srcdir/notification.wav $pkgdir/usr/lib/$pkgname/notification.wav
 	install -D $srcdir/doNotDisturb.py $pkgdir/usr/lib/$pkgname/doNotDisturb.py

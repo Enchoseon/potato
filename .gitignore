@@ -1,0 +1,4 @@
+# MAKEPKG
+pkg/*
+*.pkg.tar.zst
+src/*

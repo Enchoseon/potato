@@ -21,6 +21,7 @@ NOISE=false
 show_help() {
 	cat <<-END
 		usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-n] [-m] [-p] [-h]
+		 	(timers)
 		 	-w <integer> [default: 25]:
 		 		work interval timer in minutes. This is how long a work interval is.
 		 	-b <integer> [default 5]:
@@ -28,18 +29,21 @@ show_help() {
 		 	-g <integer> [default 5]:
 		 		grace timer in seconds This is how long notifications are shown for.
 
+		 	(optional features)
 		 	-d:
-		 		enable do not disturb (while the timer is running)
+		 		enable do not disturb while Potato runs
 		 	-t:
 		 		enable desktop toasts
 		 	-n:
-		 		play brown noise (requires SoX to be installed)
+		 		play brown noise
 
+		 	(parity)
 		 	-m:
 		 		don't play a notification sound when a timer ends
 		 	-p:
 		 		prompt for user input when a timer ends (won't continue until user input in received)
 
+		 	(help)
 		 	-h:
 		 		print this help message and exit
 	END
@@ -47,7 +51,7 @@ show_help() {
 
 # Play notification sound
 play_notification() {
-	aplay -q "/usr/lib/potato/notification.wav" &
+	aplay -q "/usr/lib/potato-redux/notification.wav" &
 }
 
 # Toggle Do Not Disturb
@@ -55,7 +59,7 @@ toggle_dnd() {
 	! $DND && return
 	enableDnd=$1
 	if $enableDnd; then
-		python /usr/lib/potato/doNotDisturb.py &
+		python "/usr/lib/potato-redux/doNotDisturb.py" &
 	else
 		proc=$(pgrep doNotDisturb)
 		if [[ $proc ]]; then
@@ -90,7 +94,7 @@ run_timer() {
 	for ((i=$TIMER; i>0; i--))
 	do
 		printf "\r%im remaining in %s interval " $i $NAME
-		sleep 1s
+		sleep 1m
 	done
 	printf "\r%im remaining in %s interval " 0 $NAME
 	# "X" Interval Over

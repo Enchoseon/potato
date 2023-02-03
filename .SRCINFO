@@ -1,5 +1,5 @@
 pkgbase = potato-redux
-	pkgdesc = A pomodoro timer for the shell with new features and QOL changes.
+	pkgdesc = A pomodoro timer for the shell with new features and quality-of-life changes.
 	pkgver = 7
 	pkgrel = 1
 	url = https://github.com/Enchoseon/potato-redux
@@ -15,7 +15,7 @@ pkgbase = potato-redux
 	source = doNotDisturb.py
 	source = notification.wav
 	source = LICENSE
-	md5sums = 4aa885652605818d8e7761ae59f18497
+	md5sums = a18f8bd12f2092b0e58cdfdba69ca739
 	md5sums = 6a1f93699a0e933812b732cfdd26c3e9
 	md5sums = b01bacb54937c9bdd831f4d4ffd2e31c
 	md5sums = 1ddcbd2862764b43d75fb1e484bf8912

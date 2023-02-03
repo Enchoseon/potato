@@ -1,6 +1,6 @@
 # Potato Redux
 
-A pomodoro timer for the shell. This fork of Potato has new features and quality-of-life changes while remaining a simple shell script.
+A pomodoro timer for the shell with new features and quality-of-life changes.
 
 # Installation
 
@@ -10,6 +10,7 @@ A pomodoro timer for the shell. This fork of Potato has new features and quality
 
 ```
 usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-n] [-m] [-p] [-h]
+    (timers)
     -w <integer> [default: 25]:
         work interval timer in minutes. This is how long a work interval is.
     -b <integer> [default 5]:
@@ -17,18 +18,21 @@ usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-n] [-m] [-p] [-h]
     -g <integer> [default 5]:
         grace timer in seconds This is how long notifications are shown for.
 
+    (optional features)
     -d:
-        enable do not disturb (while the timer is running)
+        enable do not disturb while Potato runs
     -t:
         enable desktop toasts
     -n:
-        play brown noise (requires SoX to be installed)
+        play brown noise
 
+    (parity)
     -m:
         don't play a notification sound when a timer ends
     -p:
         prompt for user input when a timer ends (won't continue until user input in received)
 
+    (help)
     -h:
         print this help message and exit
 ```
