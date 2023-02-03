@@ -1,9 +1,9 @@
 pkgname=potato-redux
 pkgver=7
 pkgrel=1
-pkgdesc="A pomodoro timer for the shell. This fork sends toasts and enables Do Not Disturb."
+pkgdesc="A pomodoro timer for the shell with new features and QOL changes."
 arch=('any')
-url="https://github.com/Enchoseon/potato"
+url="https://github.com/Enchoseon/potato-redux"
 license=('MIT')
 conflicts=('potato')
 depends=('alsa-utils')
