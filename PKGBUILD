@@ -23,5 +23,4 @@ package() {
 	install -D -m644 $srcdir/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 	install -D $srcdir/notification.wav $pkgdir/usr/lib/$pkgname/notification.wav
 	install -D $srcdir/doNotDisturb.py $pkgdir/usr/lib/$pkgname/doNotDisturb.py
-	install -D $srcdir/hook.bash $pkgdir/usr/lib/$pkgname/doNotDisturb.py
 }
