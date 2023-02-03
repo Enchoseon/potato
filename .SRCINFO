@@ -1,6 +1,6 @@
 pkgbase = potato
 	pkgdesc = A pomodoro timer for the shell. This fork sends toasts and enables Do Not Disturb.
-	pkgver = 6
+	pkgver = 7
 	pkgrel = 1
 	url = https://github.com/Enchoseon/potato
 	arch = any

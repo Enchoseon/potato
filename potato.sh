@@ -4,11 +4,12 @@ WORK=25
 PAUSE=5
 INTERACTIVE=true
 MUTE=false
+NOISE=false
 
 # Print help to console
 show_help() {
 	cat <<-END
-		usage: potato [-s] [-m] [-w m] [-b m] [-h]
+		usage: potato [-s] [-m] [-w m] [-b m] [-n] [-h]
 		    -s: simple output. Intended for use in scripts
 		        When enabled, potato outputs one line for each minute, and doesn't print the bell character
 		        (ascii 007)
@@ -16,6 +17,7 @@ show_help() {
 		    -m: mute -- don't play sounds when work/break is over
 		    -w m: let work periods last m minutes (default is 25)
 		    -b m: let break periods last m minutes (default is 5)
+		    -n: play noise
 		    -h: print this message
 	END
 }
@@ -59,7 +61,7 @@ trap "cleanup" SIGINT
 toggle_dnd true
 
 # Get Arguments
-while getopts :sw:b:m opt; do
+while getopts :swn:b:m opt; do
 	case "$opt" in
 	s)
 		INTERACTIVE=false
@@ -73,12 +75,19 @@ while getopts :sw:b:m opt; do
 	b)
 		PAUSE=$OPTARG
 	;;
+	n)
+		NOISE=true
+	;;
 	h|\?)
 		show_help
 		exit 1
 	;;
 	esac
 done
+
+if $NOISE; then
+	play -n -q -c1 synth whitenoise lowpass -1 120 lowpass -1 120 lowpass -1 120 gain +14 &
+fi
 
 time_left="%im left of %s "
 

@@ -1,5 +1,5 @@
 pkgname=potato
-pkgver=6
+pkgver=7
 pkgrel=1
 pkgdesc="A pomodoro timer for the shell. This fork sends toasts and enables Do Not Disturb."
 arch=('any')
@@ -9,11 +9,12 @@ depends=('alsa-utils'
          'libnotify'
          'python'
          'dbus-python')
+optdepend=('sox: Brown noise support')
 source=('potato.sh'
         'doNotDisturb.py'
         'notification.wav'
         'LICENSE')
-md5sums=('a7b78d3d773a50e6160b26ab0efadddc'
+md5sums=('86c23380e0554fe5a669a734a5cd2ffe'
          '6a1f93699a0e933812b732cfdd26c3e9'
          'b01bacb54937c9bdd831f4d4ffd2e31c'
          '1ddcbd2862764b43d75fb1e484bf8912')
@@ -22,4 +23,5 @@ package() {
 	install -D -m644 $srcdir/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 	install -D $srcdir/notification.wav $pkgdir/usr/lib/$pkgname/notification.wav
 	install -D $srcdir/doNotDisturb.py $pkgdir/usr/lib/$pkgname/doNotDisturb.py
+	install -D $srcdir/hook.bash $pkgdir/usr/lib/$pkgname/doNotDisturb.py
 }
