@@ -33,25 +33,38 @@ usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-n] [-m] [-p] [-h]
         print this help message and exit
 ```
 
+# Example Usage
+
+```
+# Use the 52/17 Rule (https://wikipedia.org/wiki/52/17_rule)
+potato -w 52 -b 17
+
+# Run potato with Do Not Disturb, Toast Notifications, and Brown Noise
+potato -dtn
+
+# ???
+potato -w 69 -b 420
+```
+
 # Optional Features
 
 *(You must install each feature's respective optional dependencies to use them!)*
 
 ## Brown Noise
 
-Dependency: sox
+> Dependency: sox
 
 Play Brown noise while Potato runs.
 
 ## Do Not Disturb
 
-Dependency: python, dbus-python
+> Dependency: python, dbus-python
 
 Turn on Do Not Disturb while Potato runs. Compatible with f.do DEs (Gnome, Plasma, XFCE).
 
 ## Toast Notifications
 
-Dependency: libnotify
+> Dependency: libnotify
 
 Send toast notifications at two (2) times:
 1. When the Work timer finishes
