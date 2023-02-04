@@ -84,7 +84,7 @@ run_timer() {
 	local NAME=$2
 	for ((i=$TIMER; i>0; i--)); do # Interval Timer
 		printf "\r%im remaining in %s interval " $i $NAME
-		sleep 1
+		sleep 1m
 	done
 	printf "\r%im remaining in %s interval " 0 $NAME # Interval Over
 	send_notification $NAME &

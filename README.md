@@ -37,7 +37,7 @@ usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [
         print this help message and exit
 ```
 
-# Example Usage
+## Example Usage
 
 ```
 # Use the 52/17 Rule (https://wikipedia.org/wiki/52/17_rule)
@@ -56,19 +56,19 @@ potato -w 69 -b 420
 
 ## Brown Noise
 
-> Dependency: sox
+> Dependency: `sox`
 
 Play Brown noise while Potato runs.
 
 ## Do Not Disturb
 
-> Dependency: python, dbus-python
+> Dependency: `python`, `dbus-python`
 
 Turn on Do Not Disturb while Potato runs. Compatible with f.do DEs (Gnome, Plasma, XFCE).
 
 ## Toast Notifications
 
-> Dependency: libnotify
+> Dependency: `libnotify`
 
 Send toast notifications at two (2) times:
 1. When the Work timer finishes
@@ -76,10 +76,11 @@ Send toast notifications at two (2) times:
 
 # Bugs
 
-1. If you have Discord running in the background you won't get any toast notifications because of Do Not Disturb, but you'll still hear the notification sound even if it's minimized.
-2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb to send its toast notifications; resulting in notification spam.
+1. If using Do Not Disturb with Discord running in the background, Discord toast notifications will be successfully blocked. However, the Discord client will still play a notification sound.
+2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb to send its toast notifications. This can result in a wall of notifications that were queued up while in Do Not Disturb briefly appearing alongside Potato's toast.
 
 ## Credits
+
 Notification sound (notification.wav, originally
 zapsplat\_mobile\_phone\_notification\_003.mp3 decoded and saved as wav with
 mpg123)
