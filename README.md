@@ -1,6 +1,23 @@
-# Potato Redux
+<div align="center">
+	<h1>Potato Redux</h1>
+	<p>A pomodoro timer for the shell with new features and quality-of-life changes.</p>
+	<img src="https://img.shields.io/github/last-commit/Enchoseon/potato-redux?color=2A0944&labelColor=525E75&style=flat" alt="Last Commit">
+	<img src="https://img.shields.io/github/languages/code-size/Enchoseon/potato-redux?color=3FA796&labelColor=525E75&style=flat" alt="Code Size">
+	<!--<img src="https://img.shields.io/aur/version/potato-redux?color=FEC260&labelColor=525E75&style=flat" alt="AUR Version">-->
+	<img src="https://img.shields.io/github/license/Enchoseon/potato-redux?color=A10035&labelColor=525E75&style=flat" alt="License">
+</div>
 
-A pomodoro timer for the shell with new features and quality-of-life changes.
+<br />
+
+# Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Optional Features](#optional-features)
+- [Bugs](#bugs)
+- [To Do](#to-do)
+- [Credit](#credits)
 
 # Installation
 
@@ -37,7 +54,7 @@ usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [
         print this help message and exit
 ```
 
-## Example Usage
+# Examples
 
 ```
 # Use the 52/17 Rule (https://wikipedia.org/wiki/52/17_rule)
@@ -79,15 +96,24 @@ Send toast notifications at two (2) times:
 1. If using Do Not Disturb with Discord running in the background, Discord toast notifications will be successfully blocked. However, the Discord client will still play a notification sound.
 2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb to send its toast notifications. This can result in a wall of notifications that were queued up while in Do Not Disturb briefly appearing alongside Potato's toast.
 
+# To Do
+
+- AUR package
+    - (once I stop making rapid changes)
+- Custom sounds
+- Run user bash files at key points (e.g. timer ending)
+    - example use-case would be updating the hosts file to block YouTube.com while in work mode or changing the system color scheme depending on the current mode.
+
 # Credits
 
-Notification sound (notification.wav, originally
+- Notification sound (notification.wav, originally
 [zapsplat_mobile_phone_notification_003_16522.mp3](https://wayback.archive.org/https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-14566/zapsplat_mobile_phone_notification_003_16522.mp3) reencoded as WAV with
 ffmpeg)
 obtained from [zapsplat.com](https://www.zapsplat.com/) under Creative Commons
 CC0.
-- Reencoded With: `ffmpeg -i zapsplat_mobile_phone_notification_003_16522.mp3 -ss 0.02 -ar 24000 -filter:a "areverse,silenceremove=1:0:-50dB,areverse,volume=9.0dB" notificationNorm.wav`
-    - `-ss 0.02`: trim first 0.02 seconds of file
-    - `-ar 24000`: set sample rate to 24000Hz
-    - filter `a "areverse,silenceremove=1:0:-50dB,areverse`: trim silence at end of file
-    - filter `volume=9.0dB`: increase volume by 9dB
+    - Reencoded With: `ffmpeg -i zapsplat_mobile_phone_notification_003_16522.mp3 -ss 0.02 -ar 24000 -filter:a "areverse,silenceremove=1:0:-50dB,areverse,volume=9.0dB" notificationNorm.wav`
+        - `-ss 0.02`: trim first 0.02 seconds of file
+        - `-ar 24000`: set sample rate to 24000Hz
+        - filter `a "areverse,silenceremove=1:0:-50dB,areverse`: trim silence at end of file
+        - filter `volume=9.0dB`: increase volume by 9dB
+- [Original Potato script created by Bladtman242](https://github.com/Bladtman242/potato)
