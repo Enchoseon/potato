@@ -79,7 +79,7 @@ Send toast notifications at two (2) times:
 1. If using Do Not Disturb with Discord running in the background, Discord toast notifications will be successfully blocked. However, the Discord client will still play a notification sound.
 2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb to send its toast notifications. This can result in a wall of notifications that were queued up while in Do Not Disturb briefly appearing alongside Potato's toast.
 
-## Credits
+# Credits
 
 Notification sound (notification.wav, originally
 zapsplat\_mobile\_phone\_notification\_003.mp3 decoded and saved as wav with
