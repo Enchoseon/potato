@@ -1,13 +1,13 @@
-<div align="center">
-	<h1>Potato Redux</h1>
-	<p>A pomodoro timer for the shell with new features and quality-of-life changes.</p>
+# Potato Redux
+
+A pomodoro timer for the shell with new features and quality-of-life changes.
+
+<div align="left">
 	<img src="https://img.shields.io/github/last-commit/Enchoseon/potato-redux?color=2A0944&labelColor=525E75&style=flat" alt="Last Commit">
 	<img src="https://img.shields.io/github/languages/code-size/Enchoseon/potato-redux?color=3FA796&labelColor=525E75&style=flat" alt="Code Size">
 	<!--<img src="https://img.shields.io/aur/version/potato-redux?color=FEC260&labelColor=525E75&style=flat" alt="AUR Version">-->
 	<img src="https://img.shields.io/github/license/Enchoseon/potato-redux?color=A10035&labelColor=525E75&style=flat" alt="License">
 </div>
-
-<br />
 
 # Table of Contents
 
