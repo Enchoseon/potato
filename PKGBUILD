@@ -18,8 +18,8 @@ source=('potato.sh'
         'notification.wav'
         'LICENSE')
 md5sums=('57e3237e1f8b05729f0c93e505ed7df8'
-         '6a1f93699a0e933812b732cfdd26c3e9'
-         'b01bacb54937c9bdd831f4d4ffd2e31c'
+         '39a87a4f9151e0b7328204aaba33d7ec'
+         'e603fe85f671b058c7caee669ff43bee'
          '1ddcbd2862764b43d75fb1e484bf8912')
 package() {
 	install -D $srcdir/potato.sh $pkgdir/usr/bin/potato

@@ -1,25 +1,15 @@
 #!usr/bin/python3
 # Source: https://www.reddit.com/r/kde/comments/t7wj5c/comment/hzkprnf/
-
-# Set process name to 'doNotDisturb.py'
-def set_procname(Newname):
-	newname = bytes(Newname, "utf-8")
-	from ctypes import cdll, byref, create_string_buffer
-	libc = cdll.LoadLibrary("libc.so.6")    #Loading a 3rd party library C
-	buff = create_string_buffer(len(newname)+1) #Note: One larger than the name (man prctl says that)
-	buff.value = newname                 #Null terminated string as it should be
-	libc.prctl(15, byref(buff), 0, 0, 0) #Refer to "#define" of "/usr/include/linux/prctl.h" for the misterious value 16 & arg[3..5] are zero as the man page says.
-set_procname("doNotDisturb.py")
-
-# Import stuff
-from pydbus import SessionBus
+newname = bytes("doNotDisturb.py", "utf-8") # Set process name to 'doNotDisturb.py' with libc.so.6 (so that it can be easily killed by the bash script)
+from ctypes import cdll, byref, create_string_buffer
+libc = cdll.LoadLibrary("libc.so.6")
+buff = create_string_buffer(len(newname)+1) # Null terminated string (necessary for prctl)
+buff.value = newname
+libc.prctl(15, byref(buff), 0, 0, 0) # Refer to "#define" of "/usr/include/linux/prctl.h" for the mysterious value 16 and arg[3..5] being zero
+from pydbus import SessionBus # Imports
 import signal
 import subprocess
-
-# Enable Do Not Disturb (stops when this script it killed)
-bus = SessionBus()
+bus = SessionBus() # Suppress notifications (ends when this script is killed)
 remote_object = bus.get("org.freedesktop.Notifications", "/org/freedesktop/Notifications")
-
 remote_object.Inhibit("", "", {})
-
 signal.pause()

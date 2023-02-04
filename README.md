@@ -82,8 +82,8 @@ Send toast notifications at two (2) times:
 # Credits
 
 Notification sound (notification.wav, originally
-zapsplat\_mobile\_phone\_notification\_003.mp3 decoded and saved as wav with
-mpg123)
+[zapsplat_mobile_phone_notification_003_16522.mp3](https://wayback.archive.org/https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-14566/zapsplat_mobile_phone_notification_003_16522.mp3) reencoded as WAV with
+ffmpeg)
 obtained from [zapsplat.com](https://www.zapsplat.com/) under Creative Commons
 CC0.
-
+- Reencoded With: `ffmpeg -i zapsplat_mobile_phone_notification_003_16522.mp3 -ar 8000 -ac 1 -c:a pcm_s16le notification.wav`
