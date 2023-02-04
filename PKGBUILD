@@ -19,7 +19,7 @@ source=('potato.sh'
         'LICENSE')
 md5sums=('57e3237e1f8b05729f0c93e505ed7df8'
          '39a87a4f9151e0b7328204aaba33d7ec'
-         'e603fe85f671b058c7caee669ff43bee'
+         '8ec2e9a6856be1d9eced3e5263aead09'
          '1ddcbd2862764b43d75fb1e484bf8912')
 package() {
 	install -D $srcdir/potato.sh $pkgdir/usr/bin/potato

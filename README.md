@@ -86,4 +86,8 @@ Notification sound (notification.wav, originally
 ffmpeg)
 obtained from [zapsplat.com](https://www.zapsplat.com/) under Creative Commons
 CC0.
-- Reencoded With: `ffmpeg -i zapsplat_mobile_phone_notification_003_16522.mp3 -ar 8000 -ac 1 -c:a pcm_s16le notification.wav`
+- Reencoded With: `ffmpeg -i zapsplat_mobile_phone_notification_003_16522.mp3 -ss 0.02 -ar 24000 -filter:a "areverse,silenceremove=1:0:-50dB,areverse,volume=9.0dB" notificationNorm.wav`
+    - `-ss 0.02`: trim first 0.02 seconds of file
+    - `-ar 24000`: set sample rate to 24000Hz
+    - filter `a "areverse,silenceremove=1:0:-50dB,areverse`: trim silence at end of file
+    - filter `volume=9.0dB`: increase volume by 9dB
