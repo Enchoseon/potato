@@ -1,9 +1,7 @@
 #!/bin/bash
-
-# ========================
-# Argument Var Declaration
-# ========================
-
+### ========================
+### Argument Var Declaration
+### ========================
 WORKTIMER=25
 BREAKTIMER=5
 GRACETIMER=5
@@ -12,11 +10,9 @@ TOAST=false
 PROMPTUSER=false
 MUTE=false
 NOISE=false
-
-# =========
-# Functions
-# =========
-
+### =========
+### Functions
+### =========
 # Print help to console
 show_help() {
 	cat <<-END
@@ -48,17 +44,11 @@ show_help() {
 		 		print this help message and exit
 	END
 }
-
-# Play notification sound
-play_notification() {
-	aplay -q "/usr/lib/potato-redux/notification.wav" &
-}
-
 # Toggle Do Not Disturb
 toggle_dnd() {
 	! $DND && return
-	enableDnd=$1
-	if $enableDnd; then
+	local ENABLE=$1
+	if $ENABLE; then
 		python "/usr/lib/potato-redux/doNotDisturb.py" &
 	else
 		proc=$(pgrep doNotDisturb)
@@ -67,131 +57,94 @@ toggle_dnd() {
 		fi
 	fi
 }
-
-# Send Toast Notification
-send_toast() {
-	! $TOAST && return
-	message=$1
-	toggle_dnd false
-	notify-send -a "Potato" "$message"
-	sleep $GRACETIMER
-	toggle_dnd true
+# Send Console, Audio, and Toast Notification
+send_notification() {
+	local MESSAGE="$1 Interval Over!"
+	printf "\n$MESSAGE " # Console Notification
+	if ! $MUTE; then # Audio Notification
+		aplay -q "/usr/lib/potato-redux/notification.wav" &
+	fi
+	if ! $TOAST; then # Toast Notification
+		toggle_dnd false
+		notify-send --hint int:transient:1 -timeout=$GRACETIMER -a "Potato" "$MESSAGE"
+		sleep $GRACETIMER
+		toggle_dnd true
+	fi
 }
-
 # Prompt/wait for user input
 prompt_user() {
+	! $PROMPTUSER && return
 	read -d '' -t 0.001
 	echo "Press any key to continue..."
 	read
 }
-
 # Run timer
 run_timer() {
-	TIMER=$1
-	NAME=$2
- 	COMPLETIONMESSAGE="$NAME Interval Over!"
-	# "X" Interval Timer
-	for ((i=$TIMER; i>0; i--))
-	do
+	local TIMER=$1
+	local NAME=$2
+	for ((i=$TIMER; i>0; i--)); do # Interval Timer
 		printf "\r%im remaining in %s interval " $i $NAME
-		sleep 1m
+		sleep 1
 	done
-	printf "\r%im remaining in %s interval " 0 $NAME
-	# "X" Interval Over
-	! $MUTE && play_notification
-	send_toast $COMPLETIONMESSAGE &
-	printf "\n$COMPLETIONMESSAGE "
+	printf "\r%im remaining in %s interval " 0 $NAME # Interval Over
+	send_notification $NAME &
 	sleep $GRACETIMER
-	# Wait for user input before continuing
-	$PROMPTUSER && prompt_user
-	# Clear two lines with black magic (source: https://stackoverflow.com/a/16745408)
-	printf "\r\n"
+	prompt_user # Wait for user input before continuing
+	printf "\r\n" # Clear console with black magic (source: https://stackoverflow.com/a/16745408)
 	UPLINE=$(tput cuu1)
 	ERASELINE=$(tput el)
 	echo "$UPLINE$ERASELINE$UPLINE$ERASELINE$UPLINE$ERASELINE"
 }
-
-# Print an error message and exit the script if an optional dependency isn't installed
+# Print an error and exit if missing depedency (used to fail invalid flags)
 check_opt_dependency() {
-	COMMAND=$1
-	DEPENDENCY=$2
-	MESSAGE=$3
-	if ! command -v "$1" &> /dev/null; then
-		echo "$DEPENDENCY is not installed! $MESSAGE"
+	local COMMAND=$1
+	local DEPENDENCY=$2
+	local REMOVE=$3
+	if ! command -v "$COMMAND" &> /dev/null; then
+		echo "$DEPENDENCY is not installed! Remove $REMOVE or install the missing dependency!"
 		exit
 	fi
 }
-
-# Clean up doNotDisturb.py when exiting
-stty -echoctl
+stty -echoctl # Clean up doNotDisturb.py when exiting
 cleanup() {
-	toggle_dnd false
-	exit
+ 	toggle_dnd false && exit
 }
 trap "cleanup" SIGINT
-
-# =============
-# Get Arguments
-# =============
-
+### ==========================
+### Get and Validate Arguments
+### ==========================
 while getopts "w: b: g: dtnmph" opt; do
 	case "$opt" in
 		w)
-			WORKTIMER=$OPTARG
-			;;
+			WORKTIMER=$OPTARG;;
 		b)
-			BREAKTIMER=$OPTARG
-			;;
+			BREAKTIMER=$OPTARG;;
 		g)
-			GRACETIMER=$OPTARG
-			;;
+			GRACETIMER=$OPTARG;;
 		d)
-			DND=true
-			;;
+			DND=true;;
 		t)
-			TOAST=true
-			;;
+			TOAST=true;;
 		n)
-			NOISE=true
-			;;
+			NOISE=true;;
 		m)
-			MUTE=true
-			;;
+			MUTE=true;;
 		p)
-			PROMPTUSER=true
-			;;
+			PROMPTUSER=true;;
 		h|\?)
-			show_help
-			exit 1
-			;;
+			show_help && exit 1;;
 	esac
 done
-
-# =======================================
-# Check Optional Dependencies (If Needed)
-# =======================================
-
-$DND && check_opt_dependency "python" "Python" "Remove the Do Not Disturb flag (-d) or install the missing dependency!"
-$TOAST && check_opt_dependency "notify-send" "Libnotify" "Remove the Toast flag (-t) or install the missing dependency!"
-$NOISE && check_opt_dependency "play" "Sox" "Remove the noise flag (-n) or install the missing dependency!"
-
-# ====================
-# Start Other Features
-# ====================
-
-# Start doNotDisturb.py
-toggle_dnd true
-
-# Start playing brown noise
-$NOISE && play -n -q -c1 synth whitenoise lowpass -1 120 lowpass -1 120 lowpass -1 120 gain +14 &
-
-# ==============
-# Pomodoro Timer
-# ==============
-
+$DND && check_opt_dependency "python" "Python" "Do Not Disturb flag (-d)"
+$TOAST && check_opt_dependency "notify-send" "Libnotify" "Toast flag (-t)"
+$NOISE && check_opt_dependency "play" "Sox" "Noise flag (-n)"
+### ================
+### Start Everything
+### ================
+toggle_dnd true # Start doNotDisturb.py
+$NOISE && play -n -q -c1 synth whitenoise lowpass -1 120 lowpass -1 120 lowpass -1 120 gain +14 & # Start playing brown noise
 printf "\n"
-while true
-do
+while true; do # Start Pomodoro timer
 	run_timer $WORKTIMER "Work"
 	run_timer $BREAKTIMER "Break"
 done
