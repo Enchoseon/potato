@@ -26,7 +26,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 # Usage
 
 ```
-usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [-p] [-h]
+usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [-p] [-s] [-h]
     (timers)
     -w <integer> [default: 25]:
         work interval timer in minutes. This is how long a work interval is.
@@ -39,7 +39,7 @@ usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [
     -d:
         enable do not disturb while Potato runs
     -t:
-        enable desktop toasts
+        send desktop toasts whenever a timer finishes
     -n:
         play brown noise
 
@@ -47,7 +47,11 @@ usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [
     -m:
         don't play a notification sound when a timer ends
     -p:
-        prompt for user input when a timer ends (won't continue until user input in received)
+        prompt for user input when a timer ends (won't continue until user input is received)
+
+    (debugging)
+    -s:
+        speed up the timer (timer counts down in seconds instead of minutes)
 
     (help)
     -h:
@@ -103,6 +107,8 @@ Send toast notifications at two (2) times:
 - Custom sounds
 - Run user bash files at key points (e.g. timer ending)
     - example use-case would be updating the hosts file to block YouTube.com while in work mode or changing the system color scheme depending on the current mode.
+- Hotkey interaction (pausing, changing timer, etc.)
+- Send notifications to KDE Connect
 
 # Credits
 

@@ -2,21 +2,26 @@
 ### ========================
 ### Argument Var Declaration
 ### ========================
+# Timers
 WORKTIMER=25
 BREAKTIMER=5
 GRACETIMER=5
+# Optional Features
 DND=false
 TOAST=false
 PROMPTUSER=false
+# Parity
 MUTE=false
 NOISE=false
+# Debugging
+SPEEDUP=false
 ### =========
 ### Functions
 ### =========
 # Print help to console
 show_help() {
 	cat <<-END
-		usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [-p] [-h]
+		usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [-p] [-s] [-h]
 		 	(timers)
 		 	-w <integer> [default: 25]:
 		 		work interval timer in minutes. This is how long a work interval is.
@@ -29,7 +34,7 @@ show_help() {
 		 	-d:
 		 		enable do not disturb while Potato runs
 		 	-t:
-		 		enable desktop toasts
+		 		send desktop toasts whenever a timer finishes
 		 	-n:
 		 		play brown noise
 
@@ -37,7 +42,11 @@ show_help() {
 		 	-m:
 		 		don't play a notification sound when a timer ends
 		 	-p:
-		 		prompt for user input when a timer ends (won't continue until user input in received)
+		 		prompt for user input when a timer ends (won't continue until user input is received)
+
+		 	(debugging)
+		 	-s:
+		 		speed up the timer (timer counts down in seconds instead of minutes)
 
 		 	(help)
 		 	-h:
@@ -64,9 +73,9 @@ send_notification() {
 	if ! $MUTE; then # Audio Notification
 		aplay -q "/usr/lib/potato-redux/notification.wav" &
 	fi
-	if ! $TOAST; then # Toast Notification
+	if $TOAST; then # Toast Notification
 		toggle_dnd false
-		notify-send --hint int:transient:1 -timeout=$GRACETIMER -a "Potato" "$MESSAGE"
+		notify-send --transient --expire-time $(($GRACETIMER*900)) --app-name "Potato" "$MESSAGE" # (expire time is slightly less than GRACETIMER so that the toast can actually expire)
 		sleep $GRACETIMER
 		toggle_dnd true
 	fi
@@ -74,7 +83,7 @@ send_notification() {
 # Prompt/wait for user input
 prompt_user() {
 	! $PROMPTUSER && return
-	read -d '' -t 0.001
+	read -d '' -t 0.001 # Flush STDIN
 	echo "Press any key to continue..."
 	read
 }
@@ -84,7 +93,11 @@ run_timer() {
 	local NAME=$2
 	for ((i=$TIMER; i>0; i--)); do # Interval Timer
 		printf "\r%im remaining in %s interval " $i $NAME
-		sleep 1m
+		if $SPEEDUP; then
+			sleep 1
+		else
+			sleep 1m
+		fi
 	done
 	printf "\r%im remaining in %s interval " 0 $NAME # Interval Over
 	send_notification $NAME &
@@ -113,7 +126,7 @@ trap "cleanup" SIGINT
 ### ==========================
 ### Get and Validate Arguments
 ### ==========================
-while getopts "w: b: g: dtnmph" opt; do
+while getopts "w: b: g: dtnmpsh" opt; do
 	case "$opt" in
 		w)
 			WORKTIMER=$OPTARG;;
@@ -131,6 +144,8 @@ while getopts "w: b: g: dtnmph" opt; do
 			MUTE=true;;
 		p)
 			PROMPTUSER=true;;
+		s)
+			SPEEDUP=true;;
 		h|\?)
 			show_help && exit 1;;
 	esac
