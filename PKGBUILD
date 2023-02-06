@@ -12,12 +12,13 @@ depends=('alsa-utils')
 optdepends=('sox: Brown noise support'
             'libnotify: Toast notification support'
             'python: Do Not Disturb support'
-            'dbus-python: Do Not Disturb support')
+            'dbus-python: Do Not Disturb support',
+            'kdeconnect: Smartphone notification support')
 source=('potato.sh'
         'doNotDisturb.py'
         'notification.wav'
         'LICENSE')
-md5sums=('62b6bae01932cbe464fdcaf77f077225'
+md5sums=('b0be912f3dbf4b20943d57d39b6147f4'
          '39a87a4f9151e0b7328204aaba33d7ec'
          '8ec2e9a6856be1d9eced3e5263aead09'
          '1ddcbd2862764b43d75fb1e484bf8912')

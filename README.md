@@ -17,7 +17,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 - [Optional Features](#optional-features)
 - [Bugs](#bugs)
 - [To Do](#to-do)
-- [Credit](#credits)
+- [Credits](#credits)
 
 # Installation
 
@@ -26,7 +26,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 # Usage
 
 ```
-usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [-p] [-s] [-h]
+usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-k] [-m] [-p] [-s] [-h]
     (timers)
     -w <integer> [default: 25]:
         work interval timer in minutes. This is how long a work interval is.
@@ -35,13 +35,15 @@ usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [
     -g <integer> [default 5]:
         grace timer in seconds This is how long notifications are shown for.
 
-    (optional features)
+    (extra features)
     -d:
         enable do not disturb while Potato runs
     -t:
-        send desktop toasts whenever a timer finishes
+        send desktop toast whenever a timer finishes
     -n:
         play brown noise
+    -k:
+        send KDE Connect notification whenever a tiemr finishes
 
     (parity)
     -m:
@@ -71,29 +73,37 @@ potato -dtn
 potato -w 69 -b 420
 ```
 
-# Optional Features
-
-*(You must install each feature's respective optional dependencies to use them!)*
+# Extra Features
 
 ## Brown Noise
 
-> Dependency: `sox`
+> Optional Dependency: `sox`
 
 Play Brown noise while Potato runs.
 
 ## Do Not Disturb
 
-> Dependency: `python`, `dbus-python`
+> Optional Dependency: `python`, `dbus-python`
 
 Turn on Do Not Disturb while Potato runs. Compatible with f.do DEs (Gnome, Plasma, XFCE).
 
 ## Toast Notifications
 
-> Dependency: `libnotify`
+> Optional Dependency: `libnotify`
 
-Send toast notifications at two (2) times:
+Send desktop toast notifications at two (2) times:
 1. When the Work timer finishes
 2. When the Break timer finishes
+
+## KDE Connect Notifications
+
+> Optional Dependency: `kdeconnect`
+
+Send KDE Connect notifications at two (2) times:
+1. When the Work timer finishes
+2. When the Break timer finishes
+
+*Note: Make sure you've opened the appropriate ports and your smartphone is a recognized device!*
 
 # Bugs
 

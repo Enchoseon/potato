@@ -9,10 +9,11 @@ GRACETIMER=5
 # Optional Features
 DND=false
 TOAST=false
-PROMPTUSER=false
+NOISE=false
+KDECONNECT=false
 # Parity
 MUTE=false
-NOISE=false
+PROMPTUSER=false
 # Debugging
 SPEEDUP=false
 ### =========
@@ -21,7 +22,7 @@ SPEEDUP=false
 # Print help to console
 show_help() {
 	cat <<-END
-		usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-m] [-p] [-s] [-h]
+		usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-k] [-m] [-p] [-s] [-h]
 		 	(timers)
 		 	-w <integer> [default: 25]:
 		 		work interval timer in minutes. This is how long a work interval is.
@@ -30,13 +31,15 @@ show_help() {
 		 	-g <integer> [default 5]:
 		 		grace timer in seconds This is how long notifications are shown for.
 
-		 	(optional features)
+		 	(extra features)
 		 	-d:
 		 		enable do not disturb while Potato runs
 		 	-t:
-		 		send desktop toasts whenever a timer finishes
+		 		send desktop toast whenever a timer finishes
 		 	-n:
 		 		play brown noise
+		 	-k:
+		 		send KDE Connect notification whenever a tiemr finishes
 
 		 	(parity)
 		 	-m:
@@ -52,6 +55,7 @@ show_help() {
 		 	-h:
 		 		print this help message and exit
 	END
+	exit 1
 }
 # Toggle Do Not Disturb
 toggle_dnd() {
@@ -66,7 +70,7 @@ toggle_dnd() {
 		fi
 	fi
 }
-# Send Console, Audio, and Toast Notification
+# Send Console, Audio, Toast, and KDE Connect Notification
 send_notification() {
 	local MESSAGE="$1 Interval Over!"
 	printf "\n$MESSAGE " # Console Notification
@@ -78,6 +82,12 @@ send_notification() {
 		notify-send --transient --expire-time $(($GRACETIMER*900)) --app-name "Potato" "$MESSAGE" # (expire time is slightly less than GRACETIMER so that the toast can actually expire)
 		sleep $GRACETIMER
 		toggle_dnd true
+	fi
+	if $KDECONNECT; then # KDE Connect Notification
+		kdeconnect-cli --refresh > /dev/null 2>&1
+		local DEVICEID=$(kdeconnect-cli -l --id-only) # Grabs first device id in the list
+		kdeconnect-cli --pair -d "$DEVICEID"  > /dev/null 2>&1
+		kdeconnect-cli -d "$DEVICEID" --ping-msg "$MESSAGE"
 	fi
 }
 # Prompt/wait for user input
@@ -120,13 +130,14 @@ check_opt_dependency() {
 }
 stty -echoctl # Clean up doNotDisturb.py when exiting
 cleanup() {
- 	toggle_dnd false && exit
+ 	toggle_dnd false
+ 	exit
 }
 trap "cleanup" SIGINT
 ### ==========================
 ### Get and Validate Arguments
 ### ==========================
-while getopts "w: b: g: dtnmpsh" opt; do
+while getopts "w: b: g: dtnk mpsh" opt; do
 	case "$opt" in
 		w)
 			WORKTIMER=$OPTARG;;
@@ -140,6 +151,8 @@ while getopts "w: b: g: dtnmpsh" opt; do
 			TOAST=true;;
 		n)
 			NOISE=true;;
+		k)
+			KDECONNECT=true;;
 		m)
 			MUTE=true;;
 		p)
@@ -147,12 +160,13 @@ while getopts "w: b: g: dtnmpsh" opt; do
 		s)
 			SPEEDUP=true;;
 		h|\?)
-			show_help && exit 1;;
+			show_help;;
 	esac
 done
 $DND && check_opt_dependency "python" "Python" "Do Not Disturb flag (-d)"
 $TOAST && check_opt_dependency "notify-send" "Libnotify" "Toast flag (-t)"
 $NOISE && check_opt_dependency "play" "Sox" "Noise flag (-n)"
+$KDECONNECT && check_opt_dependency "kdeconnect-cli" "Kdeconnect" "KDE Connect flag (-k)"
 ### ================
 ### Start Everything
 ### ================
