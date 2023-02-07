@@ -14,7 +14,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
-- [Optional Features](#optional-features)
+- [Extra Features](#extra-features)
 - [Bugs](#bugs)
 - [To Do](#to-do)
 - [Credits](#credits)
@@ -66,8 +66,8 @@ usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-k] [
 # Use the 52/17 Rule (https://wikipedia.org/wiki/52/17_rule)
 potato -w 52 -b 17
 
-# Run potato with Do Not Disturb, Toast Notifications, and Brown Noise
-potato -dtn
+# Run potato with Do Not Disturb, Toast Notifications, Brown Noise, and KDE Connect
+potato -dtnk
 
 # ???
 potato -w 69 -b 420
@@ -118,7 +118,6 @@ Send KDE Connect notifications at two (2) times:
 - Run user bash files at key points (e.g. timer ending)
     - example use-case would be updating the hosts file to block YouTube.com while in work mode or changing the system color scheme depending on the current mode.
 - Hotkey interaction (pausing, changing timer, etc.)
-- Send notifications to KDE Connect
 
 # Credits
 
@@ -130,6 +129,6 @@ CC0.
     - Reencoded With: `ffmpeg -i zapsplat_mobile_phone_notification_003_16522.mp3 -ss 0.02 -ar 24000 -filter:a "areverse,silenceremove=1:0:-50dB,areverse,volume=9.0dB" notificationNorm.wav`
         - `-ss 0.02`: trim first 0.02 seconds of file
         - `-ar 24000`: set sample rate to 24000Hz
-        - filter `a "areverse,silenceremove=1:0:-50dB,areverse`: trim silence at end of file
+        - filter `areverse,silenceremove=1:0:-50dB,areverse`: trim silence at end of file
         - filter `volume=9.0dB`: increase volume by 9dB
 - [Original Potato script created by Bladtman242](https://github.com/Bladtman242/potato)
