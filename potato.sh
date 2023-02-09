@@ -86,8 +86,8 @@ send_notification() {
 	if $KDECONNECT; then # KDE Connect Notification
 		kdeconnect-cli --refresh > /dev/null 2>&1
 		local DEVICEID=$(kdeconnect-cli -l --id-only) # Grabs first device id in the list
-		kdeconnect-cli --pair -d "$DEVICEID"  > /dev/null 2>&1
-		kdeconnect-cli -d "$DEVICEID" --ping-msg "$MESSAGE"
+		kdeconnect-cli --pair -d "$DEVICEID" > /dev/null 2>&1
+		kdeconnect-cli -d "$DEVICEID" --ping-msg "$MESSAGE" > /dev/null 2>&1
 	fi
 }
 # Prompt/wait for user input
