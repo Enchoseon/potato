@@ -128,8 +128,9 @@ check_opt_dependency() {
 		exit
 	fi
 }
-stty -echoctl # Clean up doNotDisturb.py when exiting
-cleanup() {
+stty -echo # Hide user input
+cleanup() { # Clean up doNotDisturb.py and stty when exiting
+	stty echo
  	toggle_dnd false
  	exit
 }
