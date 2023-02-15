@@ -1,10 +1,12 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ### ========================
 ### Argument Var Declaration
 ### ========================
 # Timers
 WORKTIMER=25
 BREAKTIMER=5
+LONGBREAKTIMER=30
+LONGBREAKINTERVAL=3
 GRACETIMER=5
 # Optional Features
 DND=false
@@ -22,14 +24,18 @@ SPEEDUP=false
 # Print help to console
 show_help() {
 	cat <<-END
-		usage: potato [-w <integer>] [-b <integer>] [-g <integer>] [-d] [-t] [-n] [-k] [-m] [-p] [-s] [-h]
+		usage: potato [-w <integer>] [-b <integer>] [-l <integer>] [-i <integer>] [-g <integer>] [-d] [-t] [-n] [-k] [-m] [-p] [-s] [-h]
 		 	(timers)
 		 	-w <integer> [default: 25]:
-		 		work interval timer in minutes. This is how long a work interval is.
+		 		work interval timer in minutes
 		 	-b <integer> [default 5]:
-		 		break interval timer in minutes. This is how long a break interval is.
+		 		break interval timer in minutes
+		 	-l <integer> [default 30]:
+		 		long break interval timer in minutes (set this to zero (0) to disable long breaks)
+		 	-i <integer> [default 3]:
+		 		intervals of pomodoros (one work interval + one break interval) in-between each long break-pomodoro
 		 	-g <integer> [default 5]:
-		 		grace timer in seconds This is how long notifications are shown for.
+		 		grace timer in seconds. This is how long (toast and cli) notifications are shown for
 
 		 	(extra features)
 		 	-d:
@@ -39,7 +45,7 @@ show_help() {
 		 	-n:
 		 		play brown noise
 		 	-k:
-		 		send KDE Connect notification whenever a tiemr finishes
+		 		send KDE Connect notification whenever a timer finishes
 
 		 	(parity)
 		 	-m:
@@ -73,21 +79,21 @@ toggle_dnd() {
 # Send Console, Audio, Toast, and KDE Connect Notification
 send_notification() {
 	local MESSAGE="$1 Interval Over!"
-	printf "\n$MESSAGE " # Console Notification
+	printf "\n${MESSAGE} " # Console Notification
 	if ! $MUTE; then # Audio Notification
 		aplay -q "/usr/lib/potato-redux/notification.wav" &
 	fi
 	if $TOAST; then # Toast Notification
 		toggle_dnd false
-		notify-send --transient --expire-time $(($GRACETIMER*900)) --app-name "Potato" "$MESSAGE" # (expire time is slightly less than GRACETIMER so that the toast can actually expire)
+		notify-send --transient --expire-time $(($GRACETIMER*900)) --app-name "Potato" "${MESSAGE}" # (expire time is slightly less than GRACETIMER so that the toast can actually expire)
 		sleep $GRACETIMER
 		toggle_dnd true
 	fi
 	if $KDECONNECT; then # KDE Connect Notification
 		kdeconnect-cli --refresh > /dev/null 2>&1
 		local DEVICEID=$(kdeconnect-cli -l --id-only) # Grabs first device id in the list
-		kdeconnect-cli --pair -d "$DEVICEID" > /dev/null 2>&1
-		kdeconnect-cli -d "$DEVICEID" --ping-msg "$MESSAGE" > /dev/null 2>&1
+		kdeconnect-cli --pair -d "${DEVICEID}" > /dev/null 2>&1
+		kdeconnect-cli -d "${DEVICEID}" --ping-msg "${MESSAGE}" > /dev/null 2>&1
 	fi
 }
 # Prompt/wait for user input
@@ -101,30 +107,32 @@ prompt_user() {
 run_timer() {
 	local TIMER=$1
 	local NAME=$2
-	for ((i=$TIMER; i>0; i--)); do # Interval Timer
-		printf "\r%im remaining in %s interval " $i $NAME
-		if $SPEEDUP; then
-			sleep 1
+	if [ ${TIMER} -eq 0 ]; then # Don't proceed if the timer is disabled (set to zero)
+		return
+	fi
+	for ((i=${TIMER}; i>0; i--)); do # Interval Timer
+		printf "\r%im remaining in %s interval " "${i}" "${NAME}"
+		if ${SPEEDUP}; then
+			sleep 1s
 		else
 			sleep 1m
 		fi
 	done
-	printf "\r%im remaining in %s interval " 0 $NAME # Interval Over
-	send_notification $NAME &
-	sleep $GRACETIMER
+	printf "\r%im remaining in %s interval " 0 "${NAME}" # Interval Over
+	send_notification "${NAME}" &
+	sleep ${GRACETIMER}
 	prompt_user # Wait for user input before continuing
 	printf "\r\n" # Clear console with black magic (source: https://stackoverflow.com/a/16745408)
-	UPLINE=$(tput cuu1)
-	ERASELINE=$(tput el)
-	echo "$UPLINE$ERASELINE$UPLINE$ERASELINE$UPLINE$ERASELINE"
+	MAGICLINE="$(tput cuu1) $(tput el)"
+	echo "${MAGICLINE}${MAGICLINE}${MAGICLINE}"
 }
 # Print an error and exit if missing depedency (used to fail invalid flags)
 check_opt_dependency() {
 	local COMMAND=$1
 	local DEPENDENCY=$2
 	local REMOVE=$3
-	if ! command -v "$COMMAND" &> /dev/null; then
-		echo "$DEPENDENCY is not installed! Remove $REMOVE or install the missing dependency!"
+	if ! command -v "${COMMAND}" &> /dev/null; then
+		echo "${DEPENDENCY} is not installed! Remove ${REMOVE} or install the missing dependency!"
 		exit
 	fi
 }
@@ -138,12 +146,16 @@ trap "cleanup" SIGINT
 ### ==========================
 ### Get and Validate Arguments
 ### ==========================
-while getopts "w: b: g: dtnk mpsh" opt; do
-	case "$opt" in
+while getopts "w: b: l: i: g: dtnk mpsh" opt; do
+	case "${opt}" in
 		w)
 			WORKTIMER=$OPTARG;;
 		b)
 			BREAKTIMER=$OPTARG;;
+		l)
+			LONGBREAKTIMER=$OPTARG;;
+		i)
+			LONGBREAKINTERVAL=$OPTARG;;
 		g)
 			GRACETIMER=$OPTARG;;
 		d)
@@ -174,7 +186,14 @@ $KDECONNECT && check_opt_dependency "kdeconnect-cli" "Kdeconnect" "KDE Connect f
 toggle_dnd true # Start doNotDisturb.py
 $NOISE && play -n -q -c1 synth whitenoise lowpass -1 120 lowpass -1 120 lowpass -1 120 gain +14 & # Start playing brown noise
 printf "\n"
+CURRENTSET=0 # Keep track of the current Pomodoro to determine when to do long breaks. (one Pomodoro == 1 work period + 1 break period)
 while true; do # Start Pomodoro timer
 	run_timer $WORKTIMER "Work"
-	run_timer $BREAKTIMER "Break"
+	if [ ${CURRENTSET} -eq ${LONGBREAKINTERVAL} ] && [ ${LONGBREAKINTERVAL} -ne 0 ]; then # Do a long break (special case for if LONGBREAKINTERVAL is zero: do a short break)
+		run_timer $LONGBREAKTIMER "Long Break"
+		CURRENTSET=0
+	else # Do a short break
+		run_timer $BREAKTIMER "Break"
+	fi
+	((CURRENTSET++))
 done
