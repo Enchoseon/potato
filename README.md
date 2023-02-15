@@ -26,41 +26,41 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 # Usage
 
 ```
-usage: potato [-w <integer>] [-b <integer>] [-l <integer>] [-i <integer>] [-g <integer>] [-d] [-t] [-n] [-k] [-m] [-p] [-s] [-h]
+usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --long-break-timer <integer>] [-i --long-break-interval <integer>] [-g --grace-timer <integer>] [-d --do-not-disturb] [-t --toast] [-n --noise] [-k --kdeconnect] [-m --mute] [-p --prompt-user] [-s --speedup] [-h --help]
     (timers)
-    -w <integer> [default: 25]:
+    -w --work-timer <integer> [default: 25]:
         work interval timer in minutes
-    -b <integer> [default 5]:
+    -b --break-timer <integer> [default 5]:
         break interval timer in minutes
-    -l <integer> [default 30]:
+    -l --long-break-timer <integer> [default 30]:
         long break interval timer in minutes (set this to zero (0) to disable long breaks)
-    -i <integer> [default 3]:
+    -i --long-break-interval <integer> [default 3]:
         intervals of pomodoros (one work interval + one break interval) in-between each long break-pomodoro
-    -g <integer> [default 5]:
+    -g --grace-timer <integer> [default 5]:
         grace timer in seconds. This is how long (toast and cli) notifications are shown for
 
     (extra features)
-    -d:
+    -d --do-not-disturb:
         enable do not disturb while Potato runs
-    -t:
+    -t --toast:
         send desktop toast whenever a timer finishes
-    -n:
+    -n --noise:
         play brown noise
-    -k:
+    -k --kdeconnect:
         send KDE Connect notification whenever a timer finishes
 
     (parity)
-    -m:
+    -m --mute:
         don't play a notification sound when a timer ends
-    -p:
+    -p --prompt-user:
         prompt for user input when a timer ends (won't continue until user input is received)
 
     (debugging)
-    -s:
+    -s --speedup:
         speed up the timer (timer counts down in seconds instead of minutes)
 
     (help)
-    -h:
+    -h --help:
         print this help message and exit
 ```
 
