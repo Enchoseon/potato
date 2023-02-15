@@ -62,7 +62,7 @@ show_help() {
 		 	-h --help:
 		 		print this help message and exit
 	END
-	exit 1
+	cleanup
 }
 # Toggle Do Not Disturb
 toggle_dnd() {
@@ -134,7 +134,7 @@ check_opt_dependency() {
 	local REMOVE=$3
 	if ! command -v "${COMMAND}" &> /dev/null; then
 		echo "${DEPENDENCY} is not installed! Remove ${REMOVE} or install the missing dependency!"
-		exit
+		cleanup
 	fi
 }
 stty -echo # Hide user input
@@ -151,14 +151,13 @@ trap "cleanup" SIGINT
 ! getopt --test > /dev/null
 if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 	echo "Fatal Error: Enhanced getopt (util-linux) was not found!"
-	exit 1
+	cleanup
 fi
 LONGOPTS="work-timer:,break-timer:,long-break-timer:,long-break-interval:,grace-timer:,do-not-disturb,toast,noise,kdeconnect,mute,prompt-user,speedup,help"
 OPTIONS="w:b:l:i:g:dtnkmpsh"
 ! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
 	show_help
-    exit 2
 fi
 eval set -- "$PARSED"
 while true; do case "$1" in
