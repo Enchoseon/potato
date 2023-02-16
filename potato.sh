@@ -216,11 +216,11 @@ printf "\n"
 CURRENTSET=0 # Keep track of the current Pomodoro to determine when to do long breaks. (one Pomodoro == 1 work period + 1 break period)
 while true; do # Start Pomodoro timer
 	run_timer $WORKTIMER "Work"
-	if [ ${CURRENTSET} -eq ${LONGBREAKINTERVAL} ] && [ ${LONGBREAKINTERVAL} -ne 0 ]; then # Do a long break (special case for if LONGBREAKINTERVAL is zero: do a short break)
+	if [ ${CURRENTSET} -eq ${LONGBREAKINTERVAL} ] && [ ${LONGBREAKTIMER} -ne 0 ]; then # Do a long break (special case for if LONGBREAKTIMER is zero: do a short break)
 		run_timer $LONGBREAKTIMER "Long Break"
-		CURRENTSET=0
+		CURRENTSET=-1
 	else # Do a short break
 		run_timer $BREAKTIMER "Break"
 	fi
-	((CURRENTSET++))
+	CURRENTSET=$((CURRENTSET+1))
 done
