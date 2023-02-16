@@ -15,18 +15,22 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 - [Usage](#usage)
 - [Examples](#examples)
 - [Extra Features](#extra-features)
-- [Bugs](#bugs)
-- [To Do](#to-do)
+- [Notes](#notes)
 - [Credits](#credits)
 
 # Installation
 
-`makepkg -si`
+**Arch**: `makepkg -si`
+
+**Manual Installation**: Copy...
+1. ... `potato.sh` to `/usr/bin/potato`
+2. ... `notification.wav` to `/usr/lib/potato-redux/notification.wav`
+3. ... `doNotDisturb.py` to `/usr/lib/potato-redux/doNotDisturb.py`
 
 # Usage
 
 ```
-usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --long-break-timer <integer>] [-i --long-break-interval <integer>] [-g --grace-timer <integer>] [-d --do-not-disturb] [-t --toast] [-n --noise] [-k --kdeconnect] [-m --mute] [-p --prompt-user] [-s --speedup] [-h --help]
+usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --long-break-timer <integer>] [-i --long-break-interval <integer>] [-g --grace-timer <integer>] [-d --do-not-disturb] [-t --toast] [-n --noise] [-k --kdeconnect] [-m --mute] [-p --prompt-user] [-f --final-stats] [-s --speedup] [-h --help]
     (timers)
     -w --work-timer <integer> [default: 25]:
         work interval timer in minutes
@@ -49,11 +53,13 @@ usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --lon
     -k --kdeconnect:
         send KDE Connect notification whenever a timer finishes
 
-    (parity)
+    (parity & misc)
     -m --mute:
         don't play a notification sound when a timer ends
     -p --prompt-user:
         prompt for user input when a timer ends (won't continue until user input is received)
+    -f --final-stats:
+        print stats for the entire session to the console when exiting
 
     (debugging)
     -s --speedup:
@@ -66,17 +72,13 @@ usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --lon
 
 # Examples
 
-```
-# Use the 52/17 Rule (https://wikipedia.org/wiki/52/17_rule).
-# - Note the use of "-l 0" to disable the Long Break interval!
-potato -w 52 -b 17 -l 0
+[52/17 Rule](https://wikipedia.org/wiki/52/17_rule): `potato -w 52 -b 17 -l 0`
+- *Note the use of `-l 0` to disable the Long Break interval!*
 
-# Run potato with Do Not Disturb, Toast Notifications, Brown Noise, and KDE Connect
-potato -dtnk
+Maintainer's Pick: `potato -dtnkf`
+- *Do Not Disturb, Toast Notifications, Brown Noise, KDE Connect, and Final Stats*
 
-# ???
-potato -w 69 -b 420
-```
+???: `potato -w 69 -b 420`
 
 # Extra Features
 
@@ -110,12 +112,14 @@ Send KDE Connect notifications at two (2) times:
 
 *Note: Make sure you've opened the appropriate ports and your smartphone is a recognized device!*
 
-# Bugs
+# Notes
+
+## Bugs
 
 1. If using Do Not Disturb with Discord running in the background, Discord toast notifications will be suppressed but the Discord client will still play its own notification sound.
 2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb when sending its toast notifications. This can the notifications that were queued up while in DND briefly appearing alongside Potato's toast in a wall of notification spam.
 
-# To Do
+## To Do
 
 - AUR package (once I stop making rapid changes)
 - Run user bash files at key points (e.g. timer ending)

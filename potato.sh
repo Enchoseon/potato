@@ -14,18 +14,21 @@ DND=false
 TOAST=false
 NOISE=false
 KDECONNECT=false
-# Parity
+# Parity & Misc
 MUTE=false
 PROMPTUSER=false
+FINALSTATS=false
 # Debugging
 SPEEDUP=false
+# Nonargument
+CURRENTSET=1 # Keep track of the current Pomodoro to determine when to do long breaks. One Pomodoro == 1 work period + 1 break period.
 ### =========
 ### Functions
 ### =========
 # Print help to console
 show_help() {
 	cat <<-END
-		usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --long-break-timer <integer>] [-i --long-break-interval <integer>] [-g --grace-timer <integer>] [-d --do-not-disturb] [-t --toast] [-n --noise] [-k --kdeconnect] [-m --mute] [-p --prompt-user] [-s --speedup] [-h --help]
+		usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --long-break-timer <integer>] [-i --long-break-interval <integer>] [-g --grace-timer <integer>] [-d --do-not-disturb] [-t --toast] [-n --noise] [-k --kdeconnect] [-m --mute] [-p --prompt-user] [-f --final-stats] [-s --speedup] [-h --help]
 		 	(timers)
 		 	-w --work-timer <integer> [default: 25]:
 		 		work interval timer in minutes
@@ -48,11 +51,13 @@ show_help() {
 		 	-k --kdeconnect:
 		 		send KDE Connect notification whenever a timer finishes
 
-		 	(parity)
+		 	(parity & misc)
 		 	-m --mute:
 		 		don't play a notification sound when a timer ends
 		 	-p --prompt-user:
 		 		prompt for user input when a timer ends (won't continue until user input is received)
+		 	-f --final-stats:
+		 		print stats for the entire session to the console when exiting
 
 		 	(debugging)
 		 	-s --speedup:
@@ -66,14 +71,14 @@ show_help() {
 }
 # Toggle Do Not Disturb
 toggle_dnd() {
-	! $DND && return
+	! ${DND} && return
 	local ENABLE=$1
-	if $ENABLE; then
+	if ${ENABLE}; then
 		python "/usr/lib/potato-redux/doNotDisturb.py" &
 	else
 		proc=$(pgrep doNotDisturb)
-		if [[ $proc ]]; then
-			kill $proc
+		if [[ ${proc} ]]; then
+			kill ${proc}
 		fi
 	fi
 }
@@ -81,28 +86,21 @@ toggle_dnd() {
 send_notification() {
 	local MESSAGE="$1 Interval Over!"
 	printf "\n${MESSAGE} " # Console Notification
-	if ! $MUTE; then # Audio Notification
+	if ! ${MUTE}; then # Audio Notification
 		aplay -q "/usr/lib/potato-redux/notification.wav" &
 	fi
-	if $TOAST; then # Toast Notification
+	if ${TOAST}; then # Toast Notification
 		toggle_dnd false
 		notify-send --transient --expire-time $(($GRACETIMER*900)) --app-name "Potato" "${MESSAGE}" # (expire time is slightly less than GRACETIMER so that the toast can actually expire)
-		sleep $GRACETIMER
+		sleep ${GRACETIMER}
 		toggle_dnd true
 	fi
-	if $KDECONNECT; then # KDE Connect Notification
+	if ${KDECONNECT}; then # KDE Connect Notification
 		kdeconnect-cli --refresh > /dev/null 2>&1
 		local DEVICEID=$(kdeconnect-cli -l --id-only) # Grabs first device id in the list
 		kdeconnect-cli --pair -d "${DEVICEID}" > /dev/null 2>&1
 		kdeconnect-cli -d "${DEVICEID}" --ping-msg "${MESSAGE}" > /dev/null 2>&1
 	fi
-}
-# Prompt/wait for user input
-prompt_user() {
-	! $PROMPTUSER && return
-	read -d '' -t 0.001 # Flush STDIN
-	echo "Press any key to continue..."
-	read
 }
 # Run timer
 run_timer() {
@@ -122,7 +120,11 @@ run_timer() {
 	printf "\r%im remaining in %s interval " 0 "${NAME}" # Interval Over
 	send_notification "${NAME}" &
 	sleep ${GRACETIMER}
-	prompt_user # Wait for user input before continuing
+	if ${PROMPTUSER}; then # Wait for user input before continuing
+		read -d '' -t 0.001 # Flush STDIN
+		echo "Press any key to continue..."
+		read
+	fi
 	printf "\r\n" # Clear console with black magic (source: https://stackoverflow.com/a/16745408)
 	MAGICLINE="$(tput cuu1) $(tput el)"
 	echo "${MAGICLINE}${MAGICLINE}${MAGICLINE}"
@@ -139,6 +141,9 @@ check_opt_dependency() {
 }
 stty -echo # Hide user input
 cleanup() { # Clean up doNotDisturb.py and stty when exiting
+	if ${FINALSTATS}; then
+		printf "\n\nCompleted Pomodoros: $((${CURRENTSET}-1)) "
+	fi
 	stty echo
  	toggle_dnd false
  	exit
@@ -153,9 +158,9 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 	echo "Fatal Error: Enhanced getopt (util-linux) was not found!"
 	cleanup
 fi
-LONGOPTS="work-timer:,break-timer:,long-break-timer:,long-break-interval:,grace-timer:,do-not-disturb,toast,noise,kdeconnect,mute,prompt-user,speedup,help"
-OPTIONS="w:b:l:i:g:dtnkmpsh"
-! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
+LONGOPTS="work-timer:,break-timer:,long-break-timer:,long-break-interval:,grace-timer:,do-not-disturb,toast,noise,kdeconnect,mute,prompt-user,final-stats,speedup,help"
+OPTIONS="w:b:l:i:g:dtnkmpfsh"
+! PARSED=$(getopt --options=${OPTIONS} --longoptions=${LONGOPTS} --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
 	show_help
 fi
@@ -194,6 +199,9 @@ while true; do case "$1" in
 	-p|--prompt-user)
 		PROMPTUSER=true
 		shift;;
+	-f|--final-stats)
+		FINALSTATS=true
+		shift;;
 	-s|--speedup)
 		SPEEDUP=true
 		shift;;
@@ -211,16 +219,14 @@ $KDECONNECT && check_opt_dependency "kdeconnect-cli" "Kdeconnect" "KDE Connect f
 ### Start Everything
 ### ================
 toggle_dnd true # Start doNotDisturb.py
-$NOISE && play -n -q -c1 synth whitenoise lowpass -1 120 lowpass -1 120 lowpass -1 120 gain +14 & # Start playing brown noise
+${NOISE} && play -n -q -c1 synth whitenoise lowpass -1 120 lowpass -1 120 lowpass -1 120 gain +14 & # Start playing brown noise
 printf "\n"
-CURRENTSET=0 # Keep track of the current Pomodoro to determine when to do long breaks. (one Pomodoro == 1 work period + 1 break period)
 while true; do # Start Pomodoro timer
-	run_timer $WORKTIMER "Work"
-	if [ ${CURRENTSET} -eq ${LONGBREAKINTERVAL} ] && [ ${LONGBREAKTIMER} -ne 0 ]; then # Do a long break (special case for if LONGBREAKTIMER is zero: do a short break)
+	run_timer ${WORKTIMER} "Work"
+	if [ `expr ${CURRENTSET} % $(( ${LONGBREAKINTERVAL}+1 ))` -eq 0 ] && [ ${LONGBREAKTIMER} -ne 0 ]; then # Do a long break (special case for if LONGBREAKTIMER is zero: always do a short break)
 		run_timer $LONGBREAKTIMER "Long Break"
-		CURRENTSET=-1
 	else # Do a short break
 		run_timer $BREAKTIMER "Break"
 	fi
-	CURRENTSET=$((CURRENTSET+1))
+	CURRENTSET=$(( CURRENTSET+1 ))
 done
