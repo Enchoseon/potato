@@ -9,7 +9,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 	<img src="https://img.shields.io/github/license/Enchoseon/potato-redux?color=A10035&labelColor=525E75&style=flat" alt="License">
 </div>
 
-## Table of Contents
+# Table of Contents
 
 - [Quick Start](#quick-start)
 - [Usage](#usage)
@@ -17,9 +17,9 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 - [Notes](#notes)
 - [Credits](#credits)
 
-## Quick Start
+# Quick Start
 
-### Installation
+## Installation
 
 **Arch**: `makepkg -si`
 
@@ -28,7 +28,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 2. Copy `notification.wav` to `/usr/lib/potato-redux/notification.wav`
 3. Copy `doNotDisturb.py` to `/usr/lib/potato-redux/doNotDisturb.py`
 
-### Example Commands
+## Example Commands
 
 **[52/17 Rule](https://wikipedia.org/wiki/52/17_rule)**: `potato -w52 -b17 -l0`
 - *Note the use of `-l0` to disable the Long Break interval!*
@@ -38,7 +38,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 
 **???**: `potato -w 69 -b 420`
 
-## Usage
+# Usage
 
 ```
 usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --long-break-timer <integer>] [-i --long-break-interval <integer>] [-g --grace-timer <integer>] [-d --do-not-disturb] [-t --toast] [-n --noise] [-k --kdeconnect] [-m --mute] [-p --prompt-user] [-f --final-stats] [-s --speedup] [-h --help]
@@ -81,21 +81,21 @@ usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --lon
         print this help message and exit
 ```
 
-## Extra Features
+# Extra Features
 
-### Brown Noise
+## Brown Noise
 
 > Optional Dependency: `sox`
 
 Play Brown noise while Potato runs.
 
-### Do Not Disturb
+## Do Not Disturb
 
 > Optional Dependency: `python`, `dbus-python`
 
 Turn on Do Not Disturb while Potato runs. Compatible with f.do DEs (Gnome, Plasma, XFCE).
 
-### Toast Notifications
+## Toast Notifications
 
 > Optional Dependency: `libnotify`
 
@@ -103,7 +103,7 @@ Send desktop toast notifications at two (2) times:
 1. When the Work timer finishes
 2. When the Break timer finishes
 
-### KDE Connect Notifications
+## KDE Connect Notifications
 
 > Optional Dependency: `kdeconnect`
 
@@ -113,14 +113,14 @@ Send KDE Connect notifications at two (2) times:
 
 *Note: Make sure you've opened the appropriate ports and your smartphone is a recognized device!*
 
-## Notes
+# Notes
 
-### Bugs
+## Bugs
 
 1. If using Do Not Disturb with Discord running in the background, Discord toast notifications will be suppressed but the Discord client will still play its own notification sound.
 2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb when sending its toast notifications. This can the notifications that were queued up while in DND briefly appearing alongside Potato's toast in a wall of notification spam.
 
-### To Do
+## To Do
 
 - AUR package (once I stop making rapid changes)
 - Run user bash files at key points (e.g. timer ending)
@@ -130,7 +130,7 @@ Send KDE Connect notifications at two (2) times:
         - custom notification sounds for each timer
 - Pause/unpause/change timer while running
 
-## Credits
+# Credits
 
 - Notification.wav, originally [zapsplat_mobile_phone_notification_003_16522.mp3](https://wayback.archive.org/https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-14566/zapsplat_mobile_phone_notification_003_16522.mp3) (reencoded as WAV with
 `ffmpeg -i zapsplat_mobile_phone_notification_003_16522.mp3 -ss 0.02 -ar 24000 -filter:a "areverse,silenceremove=1:0:-50dB,areverse,volume=9.0dB" notificationNorm.wav`) obtained from [zapsplat.com](https://www.zapsplat.com/) under CC0.
