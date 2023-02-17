@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -o errexit -o pipefail -o noclobber -o nounset
+set -o pipefail -o noclobber -o nounset
 ### ========================
 ### Argument Var Declaration
 ### ========================
@@ -102,6 +102,14 @@ send_notification() {
 		kdeconnect-cli -d "${DEVICEID}" --ping-msg "${MESSAGE}" > /dev/null 2>&1
 	fi
 }
+# Clear console with black magic (source: https://stackoverflow.com/a/16745408)
+delete_lines() {
+	local LINES=$1
+	printf "\r\n"
+	for ((i=${LINES}; i>0; i--)); do
+		printf "$(tput cuu1) $(tput el)"
+	done
+}
 # Run timer
 run_timer() {
 	local TIMER=$1
@@ -121,13 +129,12 @@ run_timer() {
 	send_notification "${NAME}" &
 	sleep ${GRACETIMER}
 	if ${PROMPTUSER}; then # Wait for user input before continuing
-		read -d '' -t 0.001 # Flush STDIN
-		echo "Press any key to continue..."
+		read -t 1 -n 10000 discard # Flush STDIN
+		printf "\n\nPress any key to continue... "
 		read
+		delete_lines 3
 	fi
-	printf "\r\n" # Clear console with black magic (source: https://stackoverflow.com/a/16745408)
-	MAGICLINE="$(tput cuu1) $(tput el)"
-	echo "${MAGICLINE}${MAGICLINE}${MAGICLINE}"
+	delete_lines 2
 }
 # Print an error and exit if missing depedency (used to fail invalid flags)
 check_opt_dependency() {
