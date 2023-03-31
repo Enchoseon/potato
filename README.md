@@ -79,19 +79,25 @@ usage: potato [-w --work-timer <integer>] [-b --break-timer <integer>] [-l --lon
 
 ## Brown Noise
 
-> Optional Dependency: `sox`
+> Optional Dependency (AUR): `sox`
+
+> Optional Dependency (Gentoo): `media-sound/sox`
 
 Play Brown noise while Potato runs.
 
 ## Do Not Disturb
 
-> Optional Dependency: `python`, `dbus-python`
+> Optional Dependency (AUR): `python`, `dbus-python`
+
+> Optional Dependency (Gentoo): `dev-lang/python`, `dev-python/dbus-python`
 
 Turn on Do Not Disturb while Potato runs. Compatible with f.do DEs (Gnome, Plasma, XFCE).
 
 ## Toast Notifications
 
-> Optional Dependency: `libnotify`
+> Optional Dependency (AUR): `libnotify`
+
+> Optional Dependency (Gentoo): `x11-libs/libnotify`
 
 Send desktop toast notifications at two (2) times:
 1. When the Work timer finishes
@@ -99,7 +105,9 @@ Send desktop toast notifications at two (2) times:
 
 ## KDE Connect Notifications
 
-> Optional Dependency: `kdeconnect`
+> Optional Dependency (AUR): `kdeconnect`
+
+> Optional Dependency (Gentoo): `kde-misc/kdeconnect`
 
 Send KDE Connect notifications at two (2) times:
 1. When the Work timer finishes
