@@ -18,6 +18,7 @@ KDECONNECT=false
 MUTE=false
 PROMPTUSER=false
 FINALSTATS=false
+USEPIPEWIRE=false
 # Debugging
 SPEEDUP=false
 # Nonargument
@@ -58,6 +59,8 @@ show_help() {
 		 		prompt for user input when a timer ends (won't continue until user input is received)
 		 	-f --final-stats:
 		 		print stats for the entire session to the console when exiting
+		 	-u --use-pipewire:
+		 		use pipewire's "pw-cat" instead of alsa-utils's "aplay"
 
 		 	(debugging)
 		 	-s --speedup:
@@ -75,6 +78,7 @@ toggle_dnd() {
 	local ENABLE=$1
 	if ${ENABLE}; then
 		python "/usr/lib/potato-redux/doNotDisturb.py" &
+		return
 	else
 		proc=$(pgrep doNotDisturb)
 		if [[ ${proc} ]]; then
@@ -87,7 +91,11 @@ send_notification() {
 	local MESSAGE="$1 Interval Over!"
 	printf "\n${MESSAGE} " # Console Notification
 	if ! ${MUTE}; then # Audio Notification
-		aplay -q "/usr/lib/potato-redux/notification.wav" &
+		if ${USEPIPEWIRE}; then
+			pw-cat -p "/usr/lib/potato-redux/notification.wav" &
+		else
+			aplay -q "/usr/lib/potato-redux/notification.wav" &
+		fi
 	fi
 	if ${TOAST}; then # Toast Notification
 		toggle_dnd false
@@ -165,8 +173,8 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
 	echo "Fatal Error: Enhanced getopt (util-linux) was not found!"
 	cleanup
 fi
-LONGOPTS="work-timer:,break-timer:,long-break-timer:,long-break-interval:,grace-timer:,do-not-disturb,toast,noise,kdeconnect,mute,prompt-user,final-stats,speedup,help"
-OPTIONS="w:b:l:i:g:dtnkmpfsh"
+LONGOPTS="work-timer:,break-timer:,long-break-timer:,long-break-interval:,grace-timer:,do-not-disturb,toast,noise,kdeconnect,mute,prompt-user,final-stats,use-pipewire,speedup,help"
+OPTIONS="w:b:l:i:g:dtnkmpfush"
 ! PARSED=$(getopt --options=${OPTIONS} --longoptions=${LONGOPTS} --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
 	show_help
@@ -208,6 +216,9 @@ while true; do case "$1" in
 		shift;;
 	-f|--final-stats)
 		FINALSTATS=true
+		shift;;
+	-u|--use-pipewire)
+		USEPIPEWIRE=true
 		shift;;
 	-s|--speedup)
 		SPEEDUP=true
