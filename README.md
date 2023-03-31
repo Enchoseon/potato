@@ -5,7 +5,6 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 <div align="left">
 	<img src="https://img.shields.io/github/last-commit/Enchoseon/potato-redux?color=2A0944&labelColor=525E75&style=flat" alt="Last Commit">
 	<img src="https://img.shields.io/github/languages/code-size/Enchoseon/potato-redux?color=3FA796&labelColor=525E75&style=flat" alt="Code Size">
-	<!--<img src="https://img.shields.io/aur/version/potato-redux?color=FEC260&labelColor=525E75&style=flat" alt="AUR Version">-->
 	<img src="https://img.shields.io/github/license/Enchoseon/potato-redux?color=A10035&labelColor=525E75&style=flat" alt="License">
 </div>
 
@@ -21,12 +20,7 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 
 ## Installation
 
-**Arch**: `makepkg -si`
-
-**Manual Installation**:
-1. Copy `potato.sh` to `/usr/bin/potato` *(rename `potato.sh` to `potato`)*
-2. Copy `notification.wav` to `/usr/lib/potato-redux/notification.wav`
-3. Copy `doNotDisturb.py` to `/usr/lib/potato-redux/doNotDisturb.py`
+1. Run `sudo bash install.sh`
 
 ## Example Commands
 
@@ -115,14 +109,26 @@ Send KDE Connect notifications at two (2) times:
 
 # Notes
 
+## Why a Python Dependency to send a Dbus Call?
+
+See the output of this command: `qdbus org.freedesktop.Notifications /org/freedesktop/Notifications | grep Inhibit`
+```bash
+property read bool org.freedesktop.Notifications.Inhibited
+method uint org.freedesktop.Notifications.Inhibit(QString desktop_entry, QString reason, QVariantMap hints)
+method void org.freedesktop.Notifications.UnInhibit(uint)
+```
+
+The Inhibit method requires an argument of the type `QVariantMap`. We [cannot send this through the shell](https://github.com/openwebos/qt/blob/92fde5feca3d792dfd775348ca59127204ab4ac0/tools/qdbus/qdbus/qdbus.cpp#L363), it is an unsupported argument.
+
+If you really want to avoid the Python dependency you *can* replace the Python script with something that is not DE-agnostic like `qdbus org.kde.kglobalaccel /component/plasmashell invokeShortcut "toggle do not disturb"` for KDE Plasma's Plasmashell.
+
 ## Bugs
 
 1. If using Do Not Disturb with Discord running in the background, Discord toast notifications will be suppressed but the Discord client will still play its own notification sound.
-2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb when sending its toast notifications. This can the notifications that were queued up while in DND briefly appearing alongside Potato's toast in a wall of notification spam.
+2. If using Do Not Disturb, Potato will temporarily disable Do Not Disturb to send its own toast notifications. The notifications that were queued up while in Do Not Disturb may briefly appear alongside Potato's toast in a wall of notification spam.
 
 ## To Do
 
-- AUR package (once I stop making rapid changes)
 - Run user bash files at key points (e.g. timer ending)
     - example use-cases:
         - updating the hosts file to block YouTube.com while in work mode
