@@ -27,10 +27,10 @@ A pomodoro timer for the shell with new features and quality-of-life changes.
 **[52/17 Rule](https://wikipedia.org/wiki/52/17_rule)**: `potato -w52 -b17 -l0`
 - *Note the use of `-l0` to disable the Long Break interval!*
 
-**Maintainer's Personal Pick**: `potato -dtnkf`
-- *Do Not Disturb, Toast Notifications, Brown Noise, KDE Connect, and Final Stats*
+**Maintainer's Personal Pick**: `potato -tnfu`
+- *Toast Notifications, Brown Noise, Final Stats, and Pipewire*
 
-**???**: `potato -w 69 -b 420`
+**???**: `potato --work-timer 69 --break-timer 420`
 
 # Usage
 
