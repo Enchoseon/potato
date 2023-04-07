@@ -237,7 +237,7 @@ $KDECONNECT && check_opt_dependency "kdeconnect-cli" "Kdeconnect" "KDE Connect f
 ### Start Everything
 ### ================
 toggle_dnd true # Start doNotDisturb.py
-${NOISE} && play -n -q -c1 synth whitenoise lowpass -1 120 lowpass -1 120 lowpass -1 120 gain +14 & # Start playing brown noise
+${NOISE} && play -n -q -c1 synth whitenoise lowpass -1 120 lowpass -1 120 lowpass -1 120 gain +18 & # Start playing brown noise
 printf "\n"
 while true; do # Start Pomodoro timer
 	run_timer ${WORKTIMER} "Work"
